@@ -1,7 +1,10 @@
+# Полный код ai_engine.py для Google Colab
+
+```python
 import random
 import itertools
 from collections import defaultdict, Counter
-import utils  # Предполагается, что здесь функции save_ai_progress и load_ai_progress
+# import utils - закомментировал, так как используем GitHub напрямую
 from threading import Event, Thread
 import time
 import math
@@ -770,9 +773,9 @@ class CFRAgent:
             stop_threshold (float): Порог сходимости для остановки. По умолчанию 0.001.
         """
         self.nodes = {}
-        self.iterations = iterations  # Увеличено до 500,000
+        self.iterations = iterations
         self.stop_threshold = stop_threshold
-        self.save_interval = 2000     # Увеличено для производительности
+        self.save_interval = 2000
 
     def cfr(
         self,
@@ -1295,19 +1298,32 @@ class CFRAgent:
         return bottom_rank <= middle_rank <= top_rank
 
     def save_progress(self) -> None:
+        """Сохраняет прогресс через GitHub вместо utils"""
         data = {
             "nodes": self.nodes,
             "iterations": self.iterations,
             "stop_threshold": self.stop_threshold,
         }
-        utils.save_ai_progress(data, "cfr_data.pkl")
+        
+        # Используем глобальную функцию save_to_github
+        global save_to_github
+        if 'save_to_github' in globals():
+            save_to_github(data, f"Обновление модели MCCFR - {time.strftime('%Y-%m-%d %H:%M:%S')}")
+        else:
+            logger.error("Функция save_to_github не определена")
 
     def load_progress(self) -> None:
-        data = utils.load_ai_progress("cfr_data.pkl")
-        if data:
-            self.nodes = data["nodes"]
-            self.iterations = data["iterations"]
-            self.stop_threshold = data.get("stop_threshold", 0.0001)
+        """Загружает прогресс через GitHub вместо utils"""
+        # Используем глобальную функцию load_from_github
+        global load_from_github
+        if 'load_from_github' in globals():
+            data = load_from_github()
+            if data:
+                self.nodes = data["nodes"]
+                self.iterations = data["iterations"]
+                self.stop_threshold = data.get("stop_threshold", 0.0001)
+        else:
+            logger.error("Функция load_from_github не определена")
 
 
 class RandomAgent:
@@ -1375,3 +1391,4 @@ class RandomAgent:
 
     def load_progress(self) -> None:
         pass
+```
