@@ -1,6 +1,3 @@
-# Полный код ai_engine.py для Google Colab
-
-```python
 import random
 import itertools
 from collections import defaultdict, Counter
@@ -1391,4 +1388,3 @@ class RandomAgent:
 
     def load_progress(self) -> None:
         pass
-```
